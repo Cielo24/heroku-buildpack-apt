@@ -31,11 +31,15 @@ function indent() {
 
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
+APT_SOURCE_LIST_DIR="$CACHE_DIR/apt/sources"
 
 mkdir -p "$APT_CACHE_DIR/archives/partial"
 mkdir -p "$APT_STATE_DIR/lists/partial"
+mkdir -p "$APT_SOURCE_LIST_DIR"
+cat /etc/apt/sources.list > "$APT_SOURCE_LIST_DIR/sources.list"
+cat $BUILD_DIR/Aptfile.list >> "$APT_SOURCE_LIST_DIR/sources.list"
 
-APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
+APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR -o dir::etc::sourcelist=$APT_SOURCE_LIST_DIR/sources.list"
 
 topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
